@@ -40,8 +40,15 @@
             </div> <!-- rating-wrap.// -->
 
             <div class="mb-3"> 
-                <var class="price h4">Rs {{product.price|floatformat:2}}</var> 
-                <span class="text-muted">/per kg</span> 
+                <var class="price h4">Rs 
+                    {% if updated_price %}
+                    {{updated_price}}
+                    {% else %}
+                    {{product.price|floatformat:2}}
+                    {% endif %}
+                </var>
+                     
+                <span class="text-muted">/per piece</span> 
             </div> <!-- price-detail-wrap .// -->
             
             <p>{{product.product_description}}</p>
@@ -72,26 +79,19 @@
                         </div>
                     </div>
                 </div> <!-- col.// -->
+                {% if product.size_varient.count %}
                 <div class="form-group col-md">
                         <label>Select size</label>
                         <div class="mt-1">
+                            {% for size in product.size_varient.all%}
                             <label class="custom-control custom-radio custom-control-inline">
-                              <input type="radio" name="select_size" checked="" class="custom-control-input">
-                              <div class="custom-control-label">Small</div>
-                            </label>
-                        
-                            <label class="custom-control custom-radio custom-control-inline">
-                              <input type="radio" name="select_size" class="custom-control-input">
-                              <div class="custom-control-label">Medium</div>
-                            </label>
-                        
-                            <label class="custom-control custom-radio custom-control-inline">
-                              <input type="radio" name="select_size" class="custom-control-input">
-                              <div class="custom-control-label">Large</div>
-                            </label>
-                        
+                              <input type="radio" onchange = "get_correct_price('{{size.size}}')" name="select_size" {% if selected_size == size.size %} checked="" {% endif %} class="custom-control-input">
+                              <div class="custom-control-label">{{size.size}}</div>
+                            </label>   
+                            {% endfor %}                     
                         </div>
                 </div> <!-- col.// -->
+                {% endif %}
             </div> <!-- row.// -->
 
             <a href="#" class="btn  btn-primary"> Buy now </a>
@@ -99,5 +99,11 @@
         </article> <!-- product-info-aside .// -->
     </main> <!-- col.// -->
 </div> <!-- row.// -->
+
+<script>
+    function get_correct_price(size){
+        window.location.href = window.location.pathname + `?size=${size}`
+    }
+</script>
 
 {% endblock content %}
