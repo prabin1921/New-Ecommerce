@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, HttpResponse
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
+from django.http import JsonResponse
 
 from .models import *
 
@@ -68,6 +69,16 @@ def activate_email(request, email_token):
     except Exception as e:
         return HttpResponse('Invalid Email Token')
     
-# def cart(request):
+def get_cart_count(request):
+    if request.user.is_authenticated:
+        cart_count = CartItems.objects.filter(cart__is_paid=False, cart__user=request.user).count()
+        return JsonResponse({'cart_count': cart_count})
+    else:
+        return JsonResponse({'cart_count': 0})
     
-#     return render(request, 'store/product.html')
+def get_cart_total(request):
+    cart_items = request.cart_itmems.all()
+    
+    
+def Cart(request):
+    return render(request, 'accounts/cart.html')

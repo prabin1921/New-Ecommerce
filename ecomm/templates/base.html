@@ -88,11 +88,11 @@ $(document).ready(function() {
 					<div class="col-lg-4 col-sm-6 col-8">
 						<div class="widgets-wrap float-md-right">
 							<div class="widget-header  mr-3">
-								<a href="#" class="icon icon-sm rounded-circle border"><i class="fa fa-shopping-cart"></i></a>
-								<span class="badge badge-pill badge-danger notify">0</span>
+								<a href="{% url 'cart' %}" class="icon icon-sm rounded-circle border"><i class="fa fa-shopping-cart"></i></a>
+								<span class="badge badge-pill badge-danger notify">{{request.user.profile.get_cart_count}}</span>
 							</div>
 							<div class="widget-header icontext">
-								<a href="#" class="icon icon-sm rounded-circle border"><i class="fa fa-user"></i></a>
+								<a href="#" class="icon icon-sm rounded-circle border">{{user.profile}}<i class="fa fa-user"></i></a>
 								<div class="text">
 									<span class="text-muted">Welcome!</span>
 									<div> 
@@ -110,5 +110,25 @@ $(document).ready(function() {
 
 	{% block content %} {% endblock content %}
 
+	<script type="text/javascript">
+		// Function to update cart count
+		function updateCartCount() {
+			$.ajax({
+				url: "{% url 'get_cart_count' %}",
+				type: 'GET',
+				success: function(response) {
+					$(".notify").text(response.cart_count);
+				},
+				error: function(xhr, status, error) {
+					console.error(xhr.responseText);
+				}
+			});
+		}
+	
+		// Call the function initially
+		$(document).ready(function() {
+			updateCartCount();
+		});
+	</script>
 </body>
 </html>

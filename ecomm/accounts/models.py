@@ -16,11 +16,19 @@ class Profile(BaseModel):
     email_token = models.CharField(max_length = 100, null =True, blank = True)
     user_image= models.ImageField(upload_to='profile')
     
+    def __str__(self):
+        return self.user
+    
     
 
 class Cart(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name = 'carts')
     is_paid = models.BooleanField(default = False)
+    
+    
+    def __str__(self):
+        return str(self.user)
+
     
 class CartItems(BaseModel):
     cart = models.ForeignKey(Cart, on_delete = models.CASCADE, related_name = 'cart_itmes')
@@ -28,6 +36,10 @@ class CartItems(BaseModel):
     size_varient = models.ForeignKey(SizeVarient, on_delete=models.SET_NULL, null =True, blank = True)
     color_varient = models.ForeignKey(ColorVarient, on_delete= models.SET_NULL, null=True, blank=True)
     
+    def __str__(self):
+        return str(self.product)
+    
+
     
 @receiver(post_save, sender = User)
 def send_email_token(sender, instance, created,  **kwargs):

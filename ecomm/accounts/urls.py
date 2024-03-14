@@ -10,6 +10,7 @@ urlpatterns = [
     path('login/', views.login_page, name = "login"),
     path('register/', views.register_page, name = "register"),
     path('activate/<email_token>/', views.activate_email, name = "activate_email"),
-    # path('cart/', views.cart, name='cart'),
-    path('add-to-cart/', add_to_cart, name = "add_to_cart"),
+    path('get_cart_count/', views.get_cart_count, name='get_cart_count'),
+    path('cart/', views.Cart, name='cart')
+    
     ]
