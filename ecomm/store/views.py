@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import *
 from accounts.models import *
 
@@ -37,16 +37,21 @@ def get_products(request, slug):
 def add_to_cart(request, uid):
     varient = request.GET.get('varient')
     
-    product = Product.objects.get(uid= uid )
+    print(request.META.get('HTTP_REFERER'))
+    product  = get_object_or_404(Product, uid=uid)
     user = request.user
-    cart , create = Cart.objects.get_or_create(user = user, is_paid=False)
+    cart , created = Cart.objects.get_or_create(user = user, is_paid=False)
     
     cart_item = CartItems.objects.create(cart = cart, product = product)
     
     if varient:
         varient = request.GET.get('varient')
         size_varient = SizeVarient.objects.get(size = varient)
+        # color_varient = ColorVarient.objects.get(color = varient)
+        # cart_item.color_varient = color_varient
         cart_item.size_varient = size_varient
+        
+        
         cart_item.save()
     
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

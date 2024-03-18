@@ -11,6 +11,5 @@ urlpatterns = [
     path('register/', views.register_page, name = "register"),
     path('activate/<email_token>/', views.activate_email, name = "activate_email"),
     path('get_cart_count/', views.get_cart_count, name='get_cart_count'),
-    path('cart/', views.Cart, name='cart')
-    
+    path('cart/', views.cart , name='cart')
     ]

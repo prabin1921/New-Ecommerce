@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, HttpResponse
+from django.shortcuts import render, redirect, HttpResponse, get_list_or_404
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
@@ -77,8 +77,35 @@ def get_cart_count(request):
         return JsonResponse({'cart_count': 0})
     
 def get_cart_total(request):
-    cart_items = request.cart_itmems.all()
+    cart_items = request.cart_items.all()
     
     
-def Cart(request):
-    return render(request, 'accounts/cart.html')
+def cart(request):
+    user = request.user
+    user_cart = Cart.objects.filter(user = request.user.pk, is_paid = False).first()
+    if user_cart:
+        cart_items = CartItems.objects.filter(cart=user_cart.uid)
+        print(cart_items)
+        item_total = [item.product.price * item.quantity  for item in cart_items if item.product.price and item.quantity]
+        total_price = sum(item_total)
+        print(total_price)
+        discount = 60.00  # Assume there is a $60 discount
+        tax = 13.00  # Assume there is a $14 tax
+        total_price_after_discount_and_tax = total_price - (discount + tax)
+            
+        
+    else:
+        cart_items = []
+        total_price = 0
+        discount = 0
+        tax = 0
+        total_price_after_discount_and_tax = 0
+    
+    context = {
+        'cart_items': cart_items,
+        'total_price': total_price,
+        'discount': discount,
+        'tax': tax,
+        'total_price_after_discount_and_tax': (total_price_after_discount_and_tax),
+    }
+    return render(request, 'accounts/cart.html', context)

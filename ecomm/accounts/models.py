@@ -17,10 +17,9 @@ class Profile(BaseModel):
     user_image= models.ImageField(upload_to='profile')
     
     def __str__(self):
-        return self.user
+        return self.user.username
     
     
-
 class Cart(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name = 'carts')
     is_paid = models.BooleanField(default = False)
@@ -35,6 +34,8 @@ class CartItems(BaseModel):
     product = models.ForeignKey(Product, on_delete = models.SET_NULL, null = True, blank = True)
     size_varient = models.ForeignKey(SizeVarient, on_delete=models.SET_NULL, null =True, blank = True)
     color_varient = models.ForeignKey(ColorVarient, on_delete= models.SET_NULL, null=True, blank=True)
+    quantity = models.IntegerField(null = True, blank = True)
+    
     
     def __str__(self):
         return str(self.product)
